@@ -1,0 +1,52 @@
+
+<div class="task-container">
+  <h2>My Daily Tasks</h2>
+  <p>Add your tasks and track your progress.</p>
+
+  <form (ngSubmit)="addTask()">
+    <input
+      type="text"
+      name="title"
+      [(ngModel)]="title"
+      placeholder="Enter a task"
+      required
+    />
+
+    <input
+      type="date"
+      name="dueDate"
+      [(ngModel)]="dueDate"
+      required
+    />
+
+    <select name="priority" [(ngModel)]="priority">
+      <option value="Low">Low Priority</option>
+      <option value="Medium">Medium Priority</option>
+      <option value="High">High Priority</option>
+    </select>
+
+    <button type="submit">Add Task</button>
+  </form>
+
+  <div class="task-list">
+    @for (task of (tasks$ | async) ?? []; track task.id) {
+      <div
+        class="task-item"
+        [class.completed]="task.completed"
+        [appTaskHighlight]="task.priority"
+      >
+        <div>
+          <h3>{{ task.title }}</h3>
+          <p>Due: {{ task.dueDate | dueDate }}</p>
+          <p>Priority: {{ task.priority }}</p>
+        </div>
+
+        <button type="button" (click)="toggleTask(task.id)">
+          {{ task.completed ? 'Undo' : 'Complete' }}
+        </button>
+      </div>
+    } @empty {
+      <p>No tasks yet. Add your first task!</p>
+    }
+  </div>
+</div>
